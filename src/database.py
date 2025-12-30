@@ -69,6 +69,21 @@ def add_workout(date, exercise, weight, sets_list):
         conn.commit()
         return workout_id
 
+def get_workouts():
+    """
+    Get all the unique workouts in a list and return that list along with an option to insert a new workout.
+    """
+    with get_connection() as conn:
+        cursor = conn.cursor()
+
+    # 1. Select all distinct workouts
+    cursor.execute("SELECT DISTINCT exercise_name FROM workouts")
+    workouts = [row[0] for row in cursor.fetchall()]
+    # 2. Add the "other" option
+    workouts.append("other")
+    return workouts
+
+
 def update_workout_weight(workout_id, new_weight):
     """Updates the weight for a specific workout entry."""
     with get_connection() as conn:
@@ -83,3 +98,6 @@ def delete_workout(workout_id):
 
 if __name__=='__main__':
     init_db()
+    add_workout("x", "abc", 100, [(7,12)])
+    add_workout("x", "xyz", 100, [(7,12)])
+    print(get_workouts())

@@ -4,7 +4,7 @@ A snappy, terminal-based application to track your gym progress. This tool allow
 
 ## Features
 
-* **Intuitive CLI:** Built with `Click` for a fast, command-driven experience.
+* **Intuitive CLI:** Built with `Questionary` for a fast, command-driven experience.
 * **Flexible Rep Tracking:** Supports rep ranges (e.g., 8-12) rather than just single numbers.
 * **SQLite Backend:** All data is stored locally in a relational database with a one-to-many relationship between workouts and sets.
 * **Terminal Visuals:** Generate bar charts of your progress without leaving the terminal.

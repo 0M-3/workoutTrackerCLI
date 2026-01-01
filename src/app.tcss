@@ -1,0 +1,26 @@
+SideContainer {
+    align: center top;
+    dock:left;
+    width: 0.3fr;
+    height: 1fr;
+    border: solid round white;
+
+}
+.sidebutton {
+    width: 0.9fr;
+    content-align: center middle;
+    outline: hkey $accent;
+    margin: 1;
+}
+.mainbutton {
+    width: 0.8fr;
+    align: center top;
+    outline: thick $accent;
+    margin: 1 1;
+}
+MainContainer {
+    width: 0.7fr;
+    align: center top;
+    height: 1fr;
+    border: solid round white;
+}

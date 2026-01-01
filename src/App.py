@@ -1,33 +1,53 @@
 from textual.app import App, ComposeResult 
 from textual.screen import Screen
-from textual.widgets import Header, Footer, Button 
-from textual.containers import VerticalGroup
+from textual.widgets import Header, Footer, Button, ContentSwitcher
+from textual.widget import Widget
+from textual.containers import Vertical, Horizontal, Center
+from textual.binding import Binding
+
+from screens.help_screen import HelpScreen
 
 
-class ColumnsContainer(VerticalGroup):
-    DEFAULT_CSS = """
-    ColumnsContainer {
-        width: 1fr;
-        height: 1fr;
-        border: solid white;
-    }
-    """
+class SideContainer(Widget):
     def compose(self) -> ComposeResult:
-        yield Button("Button 1", id = "b1", variant="primary")
-        yield Button("Button 2", id = "b2", variant="primary")
-        yield Button("Button 3", id = "b3", variant="primary")
-        yield Button("Button 4", id = "b4", variant="primary")
+        with Vertical(id = "vertical"):
+            with Center():
+                yield Button("Add Workout", id = "b1", variant = "primary", classes = "sidebutton")
+                yield Button("View Recent Workouts", id = "b2", variant = "primary", classes = "sidebutton")
+                yield Button("Delete Workout", id = "b3", variant = "primary", classes = "sidebutton")
+                yield Button("Visualize Workout", id = "b4", variant = "primary", classes = "sidebutton")
 
+class MainContainer(Widget):
+    def compose(self) -> ComposeResult:
+            yield Button("Example", id = "b5", variant = "error", classes = "mainbutton")
 
 class MainScreen(Screen):
     def compose(self) -> ComposeResult:
         yield Header()
         yield Footer()
-        yield ColumnsContainer()
+        with Horizontal(id = "h1"):
+            yield SideContainer()
+            yield MainContainer()
         
 class LayoutApp(App):
+    CSS_PATH = "app.tcss"
+    BINDINGs = [
+        Binding("q", "app.quit", "Quit", show=False),
+        Binding("f1,?", "help", "Help"),
+    ]
+
+    async def action_help(self) -> None:
+        if isinstance(self.screen, HelpScreen):
+            self.pop_screen()
+        else:
+            await self.push_screen(HelpScreen())
+
     def on_ready(self) -> None:
         self.push_screen(MainScreen())
+
+    def on_button_pressed(self, event: Button.Pressed) -> None:
+        if event.button.classes == "sidebutton":
+            self.query_one(ContentSwitcher).current = f"b{int(event.button.id[-1])+4}"
 
 if __name__ == "__main__":
     app = LayoutApp()

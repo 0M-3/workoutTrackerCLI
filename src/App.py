@@ -6,16 +6,9 @@ from textual.containers import Vertical, Horizontal, Center
 from textual.binding import Binding
 
 from screens.help_screen import HelpScreen
+from screens.home_screen import HomeScreen
+from widgets.side_bar import SideBar
 
-
-class SideContainer(Widget):
-    def compose(self) -> ComposeResult:
-        with Vertical(id = "vertical"):
-            with Center():
-                yield Button("Add Workout", id = "b1", variant = "primary", classes = "sidebutton")
-                yield Button("View Recent Workouts", id = "b2", variant = "primary", classes = "sidebutton")
-                yield Button("Delete Workout", id = "b3", variant = "primary", classes = "sidebutton")
-                yield Button("Visualize Workout", id = "b4", variant = "primary", classes = "sidebutton")
 
 class MainContainer(Widget):
     def compose(self) -> ComposeResult:
@@ -26,7 +19,7 @@ class MainScreen(Screen):
         yield Header()
         yield Footer()
         with Horizontal(id = "h1"):
-            yield SideContainer()
+            yield SideBar()
             yield MainContainer()
         
 class LayoutApp(App):
@@ -43,7 +36,7 @@ class LayoutApp(App):
             await self.push_screen(HelpScreen())
 
     def on_ready(self) -> None:
-        self.push_screen(MainScreen())
+        self.push_screen(HomeScreen())
 
     def on_button_pressed(self, event: Button.Pressed) -> None:
         if event.button.classes == "sidebutton":

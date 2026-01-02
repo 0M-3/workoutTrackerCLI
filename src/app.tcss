@@ -1,4 +1,4 @@
-SideContainer {
+SideBar {
     align: center top;
     dock:left;
     width: 0.3fr;
@@ -23,4 +23,24 @@ MainContainer {
     align: center top;
     height: 1fr;
     border: solid round white;
+}
+Welcome {
+    width: 0.7fr;
+    align: center middle;
+    content-align: center middle;
+    height: 1fr;
+    border: solid round white;
+}
+
+AppHeader #cl-header-container {
+  height: auto;
+  background: $background;
+}
+
+AppHeader {
+  dock: top;
+  width: 1fr;
+  padding: 1 2;
+  height: auto;
+  background: $background;
 }

@@ -9,19 +9,6 @@ from screens.help_screen import HelpScreen
 from screens.home_screen import HomeScreen
 from widgets.side_bar import SideBar
 
-
-class MainContainer(Widget):
-    def compose(self) -> ComposeResult:
-            yield Button("Example", id = "b5", variant = "error", classes = "mainbutton")
-
-class MainScreen(Screen):
-    def compose(self) -> ComposeResult:
-        yield Header()
-        yield Footer()
-        with Horizontal(id = "h1"):
-            yield SideBar()
-            yield MainContainer()
-        
 class LayoutApp(App):
     CSS_PATH = "app.tcss"
     BINDINGs = [
@@ -38,9 +25,6 @@ class LayoutApp(App):
     def on_ready(self) -> None:
         self.push_screen(HomeScreen())
 
-    def on_button_pressed(self, event: Button.Pressed) -> None:
-        if event.button.classes == "sidebutton":
-            self.query_one(ContentSwitcher).current = f"b{int(event.button.id[-1])+4}"
 
 if __name__ == "__main__":
     app = LayoutApp()

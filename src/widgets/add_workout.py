@@ -46,13 +46,12 @@ class AddWorkout(Widget):
 
     @on(Button.Pressed, "#submit-workout")
     def Pressed_Submit(self, event:Button.Pressed) -> None:
-    #TODO:Complete the add workout function
-        if event.button.id == "submit-workout"
-            now_utc = datetime.now()
-            select_query = self.query_one("#select-workout", Select)
-            if select_query.value == "other":
-                select_query = self.query_one("other-workout", Input)
-            rep_query = self.query_one("#reps", Input)
-            # set_query = self.query_one("#sets", Input)
+    #FIX:This function needs to be tested further and integrated with the database functions.
+        now_utc = datetime.now()
+        select_query = self.query_one("#select-workout", Select)
+        if select_query.value == "other":
+            select_query = self.query_one("other-workout", Input)
+        rep_query = self.query_one("#reps", Input)
+        # set_query = self.query_one("#sets", Input)
         add_workout(date = now_utc, exercise = select_query.value, rep = rep_query.value)
 

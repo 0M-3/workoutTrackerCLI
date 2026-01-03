@@ -1,2 +1,19 @@
+#FIX: Test the delete workout screen
+from textual.app import ComposeResult
+from textual.screen import Screen
+from textual.widgets import Footer
+from textual.binding import Binding
+from textual.containers import Vertical, Horizontal
 
-#TODO: Complete the delete workout screen
+from widgets.side_bar import SideBar
+from widgets.app_header import AppHeader
+from widgets.delete_workout import DeleteWorkout
+
+class DeleteScreen(Screen[None]):
+    BINDINGS = [
+    ]
+    def compose(self) -> ComposeResult:
+        yield AppHeader()
+        with Horizontal():
+            yield SideBar()
+            yield DeleteWorkout()

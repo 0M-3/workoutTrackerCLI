@@ -4,6 +4,11 @@ from textual.containers import Vertical, Center
 from textual.widgets import Button
 from textual import on
 
+from screens.add_screen import AddScreen
+from screen.delete_screen import DeleteScreen
+from screen.view_screen import ViewScreen
+from screen.visualize_screen import VisualizeScreen
+
 class SideBar(Widget):
     def compose(self) -> ComposeResult:
         with Vertical(id = "vertical"):
@@ -14,13 +19,21 @@ class SideBar(Widget):
                 yield Button("Visualize Workout", id = "visualize", variant = "primary", classes = "sidebutton")
     @on(Button.Pressed, "#add-workout")
     def Pressed_Add(self) -> None:
-    #TODO: Add function for navigation to add_workout screen
+    #FIX: Test function for navigation to add_workout screen
+        self.push_screen(AddScreen())
+
     @on(Button.Pressed, "#view-workout")
     def Pressed_Add(self) -> None:
-    #TODO: Add function for navigation to view_workout screen
+    #FIX: Test function for navigation to view_workout screen
+        self.push_screen(ViewScreen())
+
     @on(Button.Pressed, "#delete-workout")
     def Pressed_Add(self) -> None:
-    #TODO: Add function for navigation to delete_workout screen
+    #FIX: Test function for navigation to delete_workout screen
+        self.push_screen(DeleteScreen())
+
     @on(Button.Pressed, "#visualized")
     def Pressed_Add(self) -> None:
-    #TODO: Add function for navigation to visualize screen
+    #FIX: Test function for navigation to visualize screen
+        self.push_screen(VisualizeScreen())
+

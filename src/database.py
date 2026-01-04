@@ -92,6 +92,9 @@ def get_dates(date_format= "%Y-%m-%d %H:%M:%S"):
     """
     Get the 5 most recent distinct dates from the database.
     """
+    with get_connection() as conn:
+        cursor = conn.cursor()
+        
     cursor.execute("SELECT date from workouts")
     datetimes = [row[0] for row in cursor.fetchall()]
     distinct_dates = set()
@@ -112,7 +115,16 @@ def delete_workout(workout_id):
     with get_connection() as conn:
         conn.execute("DELETE FROM workouts WHERE id = ?", (workout_id,))
         conn.commit()
+        conn.close()
 
+def delete_workout_by_date(date):
+    "Delete all workouts on a provided date"
+    with get_connection() as conn:
+        cursor = conn.cursor()
+    cursor.execute("DELETE * from workouts WHERE date LIKE ?", (f'%{date}%',))
+    conn.commit()
+    conn.close()
+    
 if __name__=='__main__':
     init_db()
     add_workout("x", "abc", 100, [(7,12)])

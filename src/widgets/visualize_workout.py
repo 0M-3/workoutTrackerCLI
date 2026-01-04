@@ -5,7 +5,7 @@ from textual.containers import Horizontal
 from textual import on
 from textual.reactive import reactive
 
-class ViewWorkout(Widget):
+class VisualizeWorkout(Widget):
     def compose(self) -> ComposeResult:
         with Horizontal():
             yield Select()

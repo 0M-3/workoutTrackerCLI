@@ -1,5 +1,5 @@
 from textual.widget import Widget
-from textual.widgets import Select, Input
+from textual.widgets import Select, Input, Button
 from textual.app import ComposeResult
 from textual.containers import Vertical
 from textual import on
@@ -7,7 +7,7 @@ from textual.reactive import reactive
 
 from datetime import datetime 
 
-from database import get_workouts, add_workout
+from database import init_db, get_workouts, add_workout
 
 class OtherInput(Input):
     DEFAULT_CSS = """
@@ -17,7 +17,7 @@ class OtherInput(Input):
     """
     text: reactive[str | None] = reactive(None)
 
-    def __init__ == "__main__":
+    def __init__(self):
         super().__init__(classes = "hidden")
 
     def watch_option(self) -> None:
@@ -27,7 +27,8 @@ class OtherInput(Input):
             
 
 class AddWorkout(Widget):
-    self.workouts = get_workouts()
+    init_db()
+    workouts = get_workouts()
 
     def compose(self) -> ComposeResult:
         with Vertical():

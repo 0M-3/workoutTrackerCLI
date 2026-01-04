@@ -9,12 +9,18 @@ from widgets.side_bar import SideBar
 from widgets.app_header import AppHeader
 from widgets.add_workout import AddWorkout
 
-class HomeScreen(Screen[None]):
+class AddScreen(Screen[None]):
     BINDINGS = [
     ]
+    def __init__(self, add, recent, delete, visual):
+        super.__init__()
+        self.add = add
+        self.recent = recent 
+        self.delete = delete
+        self.visual = visual
     def compose(self) -> ComposeResult:
         yield AppHeader()
         with Horizontal():
-            yield SideBar()
+            yield SideBar(add = self.add, recent = self.recent, delete = self.delete, visual = self.visual)
             yield AddWorkout()
         

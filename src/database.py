@@ -1,5 +1,6 @@
 import sqlite3
 import os
+from datetime import datetime
 
 # Path setup
 DB_FOLDER = "data"
@@ -87,6 +88,18 @@ def get_workouts():
     workouts.append("other")
     return workouts
 
+def get_dates(date_format= "%Y-%m-%d %H:%M:%S"):
+    """
+    Get the 5 most recent distinct dates from the database.
+    """
+    cursor.execute("SELECT date from workouts")
+    datetimes = [row[0] for row in cursor.fetchall()]
+    distinct_dates = set()
+    for dt_str in datetimes:
+        dt_obj = datetime.strptime(dt_str, date_format)
+        distinct_dates.add(dt_obj.strftime("%Y-%m-%d"))
+    return sorted(list(distinct_dates))
+    
 
 def update_workout_weight(workout_id, new_weight):
     """Updates the weight for a specific workout entry."""

@@ -23,23 +23,3 @@ class SideBar(Widget):
                 yield Button("View Recent Workouts", id = "view-workout", variant = "primary", classes = "sidebutton")
                 yield Button("Delete Workout", id = "delete-workout", variant = "primary", classes = "sidebutton")
                 yield Button("Visualize Workout", id = "visualize", variant = "primary", classes = "sidebutton")
-    # @on(Button.Pressed, "#add-workout")
-    # def Pressed_Add(self) -> None:
-    # #FIX: Test function for navigation to add_workout screen
-    #     self.push_screen(AddScreen())
-    #
-    # @on(Button.Pressed, "#view-workout")
-    # def Pressed_Add(self) -> None:
-    # #FIX: Test function for navigation to view_workout screen
-    #     self.push_screen(ViewScreen())
-    #
-    # @on(Button.Pressed, "#delete-workout")
-    # def Pressed_Add(self) -> None:
-    # #FIX: Test function for navigation to delete_workout screen
-    #     self.push_screen(DeleteScreen())
-    #
-    # @on(Button.Pressed, "#visualized")
-    # def Pressed_Add(self) -> None:
-    # #FIX: Test function for navigation to visualize screen
-    #     self.push_screen(VisualizeScreen())
-

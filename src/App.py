@@ -40,22 +40,18 @@ class LayoutApp(App):
 
     @on(Button.Pressed, "#add-workout")
     def Pressed_Add(self) -> None:
-    #FIX: Test function for navigation to add_workout screen
         self.push_screen(AddScreen(add = AddScreen, delete = DeleteScreen, view = ViewScreen, visual = VisualizeScreen))
 
     @on(Button.Pressed, "#view-workout")
     def Pressed_View(self) -> None:
-    #FIX: Test function for navigation to view_workout screen
         self.push_screen(ViewScreen(add = AddScreen, delete = DeleteScreen, view = ViewScreen, visual = VisualizeScreen))
 
     @on(Button.Pressed, "#delete-workout")
     def Pressed_Delete(self) -> None:
-    #FIX: Test function for navigation to delete_workout screen
         self.push_screen(DeleteScreen(add = AddScreen, delete = DeleteScreen, view = ViewScreen, visual = VisualizeScreen))
 
     @on(Button.Pressed, "#visualized")
     def Pressed_Visualize(self) -> None:
-    #FIX: Test function for navigation to visualize screen
         self.push_screen(VisualizeScreen(add = AddScreen, delete = DeleteScreen, view = ViewScreen, visual = VisualizeScreen))
 
 

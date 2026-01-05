@@ -12,15 +12,15 @@ from widgets.add_workout import AddWorkout
 class AddScreen(Screen[None]):
     BINDINGS = [
     ]
-    def __init__(self, add, recent, delete, visual):
-        super.__init__()
+    def __init__(self, add, view, delete, visual):
+        super().__init__()
         self.add = add
-        self.recent = recent 
+        self.view = view
         self.delete = delete
         self.visual = visual
     def compose(self) -> ComposeResult:
-        yield AppHeader()
+        # yield AppHeader()
         with Horizontal():
-            yield SideBar(add = self.add, recent = self.recent, delete = self.delete, visual = self.visual)
+            yield SideBar(add = self.add, view = self.view, delete = self.delete, visual = self.visual)
             yield AddWorkout()
         

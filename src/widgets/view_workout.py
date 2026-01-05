@@ -8,7 +8,7 @@ from textual.reactive import reactive
 from database import get_dates
 
 class ViewWorkout(Widget):
-    daselftes = get_dates()
+    dates= get_dates()
     def compose(self) -> ComposeResult:
         with Horizontal():
             yield Select.from_values(self.dates)

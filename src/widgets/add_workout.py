@@ -17,8 +17,8 @@ class OtherInput(Input):
     """
     text: reactive[str | None] = reactive(None)
 
-    def __init__(self):
-        super().__init__(classes = "hidden")
+    def __init__(self, id, placeholder=""):
+        super().__init__(id=id, placeholder=placeholder, classes="hidden")
 
     def watch_option(self) -> None:
         if self.text is not None:

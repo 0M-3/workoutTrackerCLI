@@ -10,20 +10,19 @@ from datetime import datetime
 from database import init_db, get_workouts, add_workout
 
 class OtherInput(Input):
-    DEFAULT_CSS = """
-    .hidden{
-        display: none;
-    }
-    """
-    text: reactive[str | None] = reactive(None)
+    show_input: reactive[str | None] = reactive(None)
 
     def __init__(self, id, placeholder=""):
         super().__init__(id=id, placeholder=placeholder, classes="hidden")
+        self.display = False
 
-    def watch_option(self) -> None:
-        if self.text is not None:
-            self.update(self.text)
-        self.set_class(self.text is None, "hidden")
+    def watch_show_input(self, show: bool) -> None:
+        """This runs whenever show_input changes."""
+        self.display = bool(show)
+        if show:
+            self.focus()
+        else:
+            self.value = ""  # Clear input if hidden
             
 
 class AddWorkout(Widget):
@@ -38,12 +37,10 @@ class AddWorkout(Widget):
             # yield Input(placeholder = "Number of sets", id = "sets", type = "number")
             yield Button("Submit Set", variant = "success", id = "submit-workout")
             
-    @on(Select.Changed)
+    @on(Select.Changed, "#select-workout")
     def select_changed(self, event:Select.Changed) -> None:
-        if event.value == "other":
-            self.query_one(OtherInput).text = "other"
-        else:
-            self.query_one(OtherInput).text = None
+        other_input = self.query_one(OtherInput)
+        other_input.show_input = (event.value == "other")
 
     @on(Button.Pressed, "#submit-workout")
     def Pressed_Submit(self, event:Button.Pressed) -> None:

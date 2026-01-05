@@ -27,7 +27,7 @@ MainContainer {
 Welcome {
     width: 0.7fr;
     align: center middle;
-    content-align: center middle;
+    content-align: center top;
     height: 1fr;
     border: solid round white;
 }

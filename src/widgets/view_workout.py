@@ -10,7 +10,7 @@ from database import get_dates
 class ViewWorkout(Widget):
     dates= get_dates()
     def compose(self) -> ComposeResult:
-        with Horizontal():
+        with Horizontal(classes = "widget-container"):
             yield Select.from_values(self.dates)
             yield Button("Query",variant = "primary", id = "view-button")
 

@@ -5,7 +5,7 @@ from textual.binding import Binding
 from textual.containers import Vertical, Horizontal
 
 from widgets.side_bar import SideBar
-# from widgets.app_header import AppHeader
+from widgets.app_header import AppHeader
 from widgets.delete_workout import DeleteWorkout
 
 class DeleteScreen(Screen[None]):
@@ -18,7 +18,7 @@ class DeleteScreen(Screen[None]):
         self.delete = delete
         self.visual = visual
     def compose(self) -> ComposeResult:
-        # yield AppHeader()
-        with Horizontal():
+        yield AppHeader()
+        with Horizontal(classes = "screen-container"):
             yield SideBar(add = self.add, view = self.view, delete = self.delete, visual = self.visual)
             yield DeleteWorkout()

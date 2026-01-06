@@ -11,7 +11,7 @@ class VisualizeWorkout(Widget):
     workouts = get_workouts()
     workouts.append("All")
     def compose(self) -> ComposeResult:
-        with Horizontal():
+        with Horizontal(classes = "widget-container"):
             yield Select.from_values(self.workouts, id = "select-visualize")
             yield Button("Generate",variant = "primary", id = "visualize-button")
 

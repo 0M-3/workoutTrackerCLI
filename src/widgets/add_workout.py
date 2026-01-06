@@ -31,7 +31,7 @@ class AddWorkout(Widget):
     workouts.append("other")
 
     def compose(self) -> ComposeResult:
-        with Vertical():
+        with Vertical(classes = "widget-container"):
             yield Select.from_values(self.workouts, id = "select-workout", prompt = "Select workout")
             yield OtherInput(placeholder = "Other workout", id = "other-workout")
             yield Input(placeholder = "Number of reps", id = "reps", type = "number")

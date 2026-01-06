@@ -6,8 +6,6 @@ from textual.containers import Horizontal, Vertical
 from rich.text import Text
 
 class AppHeader(Widget):
-    COMPONENT_CLASSES = {"app-title", "app-subtitle"}
-
     def __init__(
             self,
             name: str | None = None,
@@ -21,5 +19,3 @@ class AppHeader(Widget):
         with Horizontal():
             with Vertical(id = "cl-header-container"):
                 yield Label(Text("Workout Tracker CLI")+Text("vAlpha", style = "dim"), id = "wt-title")
-
-

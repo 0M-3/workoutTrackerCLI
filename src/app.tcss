@@ -41,6 +41,6 @@ AppHeader {
   dock: top;
   width: 1fr;
   padding: 1 2;
-  height: auto;
+  height: 3;
   background: $background;
 }

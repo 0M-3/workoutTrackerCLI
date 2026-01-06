@@ -21,58 +21,91 @@ def init_db():
     with get_connection() as conn:
         cursor = conn.cursor()
         
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS EXERCISES (
+                ID INTEGER PRIMARY KEY AUTOINCREMENT,
+                EXERCISE_NAME TEXT NOT NULL UNIQUE,
+                DATE TIMESTAMP NOT NULL
+            )
+        ''')
         # Table for general workout info
         cursor.execute('''
-            CREATE TABLE IF NOT EXISTS workouts (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                date TEXT NOT NULL,
-                exercise_name TEXT NOT NULL,
-                weight REAL NOT NULL
+            CREATE TABLE IF NOT EXISTS WORKOUTS (
+                ID INTEGER PRIMARY KEY AUTOINCREMENT,
+                DATE TIMESTAMP NOT NULL,
+                EXERCISE_ID INTEGER NOT NULL,
+                FOREIGN KEY (EXERCISE_ID) REFERENCES EXERCISES (ID) ON DELETE CASCADE
             )
         ''')
         
         # Table for specific sets (One-to-Many relationship)
         cursor.execute('''
-            CREATE TABLE IF NOT EXISTS sets (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                workout_id INTEGER NOT NULL,
-                set_number INTEGER NOT NULL,
-                reps INTEGER NOT NULL,
-                FOREIGN KEY (workout_id) REFERENCES workouts (id) ON DELETE CASCADE
+            CREATE TABLE IF NOT EXISTS SETS (
+                ID INTEGER PRIMARY KEY AUTOINCREMENT,
+                WORKOUT_ID INTEGER NOT NULL,
+                SET_NUMBER INTEGER NOT NULL,
+                REPS INTEGER NOT NULL,
+                WEIGHT INTEGER NOT NULL,
+                DATE TIMESTAMP NOT NULL,
+                FOREIGN KEY (WORKOUT_ID) REFERENCES WORKOUTS (ID) ON DELETE CASCADE,
+                UNIQUE (WORKOUT_ID, SET_NUMBER)
             )
         ''')
+
         conn.commit()
 
 # --- CRUD OPERATIONS ---
-#HACK: This function needs to be reworked it currently doesn't work the way we want it to.
+#FIX: Make sure to debug the logic below
 """
 Basically what it needs to do is take exercise name and count the number of sets for the exercise already executed in the past 12 hours and add 1 to it to get the set number.
 The current logic is rather flawed in comparison.
 Also the inputs should remove the sets_list and include reps instead.
 """
-def add_workout(date, exercise, weight, sets_list):
+def add_workout(date: datetime, exercise: str, weight: int, reps: int):
     """
     Inserts a workout and its sets.
-    sets_list should be a list of tuples: [rep1, rep2, ...]
     """
     with get_connection() as conn:
         cursor = conn.cursor()
+
+        cursor.execute("""
+            INSERT INTO EXERCISES (EXERCISE_NAME, DATE)
+            VALUES (?, ?)
+            ON CONFLICT (EXERCISE_NAME) DO NOTHING
+        """, (exercise, date))
+
+        cursor.execute("SELECT ID FROM EXERCISES WHERE EXERCISE_NAME = ?", [exercise])
+        exercise_row = cursor.fetchone()
+        if exercise_row:
+            exercise_id = exercise_row[0]
+
         
         # 1. Insert into workouts
-        cursor.execute(
-            "INSERT INTO workouts (date, exercise_name, weight) VALUES (?, ?, ?)",
-            (date, exercise, weight)
-        )
-        workout_id = cursor.lastrowid
-        
-        # 2. Insert each set
-        for i, r in enumerate(sets_list, start=1):
-            cursor.execute(
-                "INSERT INTO sets (workout_id, set_number, reps) VALUES (?, ?, ?)",
-                (workout_id, i, r)
+        cursor.execute("""
+            INSERT INTO WORKOUTS (DATE, EXERCISE_ID)
+            SELECT ?, ?
+            WHERE NOT EXISTS (
+                SELECT 1 FROM WORKOUTS
+                WHERE date(DATE) = date(?)
+                AND EXERCISE_ID = (?)
             )
+            """,
+            (date, exercise_id, date, exercise_id))
+        cursor.execute(
+            "SELECT ID FROM WORKOUTS WHERE EXERCISE_ID = ?",
+            (exercise_id,))
+        workout_id = cursor.fetchone()
+
+        # 2. Insert each set
+        cursor.execute("SELECT COUNT(*) FROM SETS WHERE WORKOUT_ID = ?", (workout_id))
+        set_row= cursor.fetchone()
+        if set_row:
+            set_number = set_row[0]
+        cursor.execute("""
+            INSERT INTO SETS (WORKOUT_ID, SET_NUMBER, REPS, WEIGHT, DATE)
+            VALUES (?, ?, ?, ?, ?)
+        """, (workout_id[0], set_number+1, reps, weight, date))
         conn.commit()
-        return workout_id
 
 def get_workouts():
     """
@@ -82,20 +115,20 @@ def get_workouts():
         cursor = conn.cursor()
 
     # 1. Select all distinct workouts
-    cursor.execute("SELECT DISTINCT exercise_name FROM workouts")
+    cursor.execute("SELECT DISTINCT EXERCISE_NAME FROM EXERCISES")
     workouts = [row[0] for row in cursor.fetchall()]
     # 2. Add the "other" option
-    workouts.append("other")
+    # workouts.append("other")
     return workouts
 
-def get_dates(date_format= "%Y-%m-%d %H:%M:%S"):
+def get_dates(date_format= "%Y-%m-%d"):
     """
     Get the 5 most recent distinct dates from the database.
     """
     with get_connection() as conn:
         cursor = conn.cursor()
         
-    cursor.execute("SELECT date from workouts")
+    cursor.execute("SELECT date(DATE) FROM WORKOUTS")
     datetimes = [row[0] for row in cursor.fetchall()]
     distinct_dates = set()
     for dt_str in datetimes:
@@ -107,13 +140,13 @@ def get_dates(date_format= "%Y-%m-%d %H:%M:%S"):
 def update_workout_weight(workout_id, new_weight):
     """Updates the weight for a specific workout entry."""
     with get_connection() as conn:
-        conn.execute("UPDATE workouts SET weight = ? WHERE id = ?", (new_weight, workout_id))
+        conn.execute("UPDATE WORKOUTS SET WEIGHT = ? WHERE ID = ?", (new_weight, workout_id))
         conn.commit()
 
 def delete_workout(workout_id):
     """Deletes a workout (and its sets via CASCADE)."""
     with get_connection() as conn:
-        conn.execute("DELETE FROM workouts WHERE id = ?", (workout_id,))
+        conn.execute("DELETE FROM WORKOUTS WHERE ID = ?", (workout_id,))
         conn.commit()
         conn.close()
 
@@ -121,12 +154,12 @@ def delete_workout_by_date(date):
     "Delete all workouts on a provided date"
     with get_connection() as conn:
         cursor = conn.cursor()
-    cursor.execute("DELETE * from workouts WHERE date LIKE ?", (f'%{date}%',))
+    cursor.execute("DELETE FROM WORKOUTS WHERE DATE LIKE ?", (f'%{date}%',))
     conn.commit()
     conn.close()
     
 if __name__=='__main__':
     init_db()
-    add_workout("x", "abc", 100, [(7,12)])
-    add_workout("x", "xyz", 100, [(7,12)])
+    add_workout("x", "abc", 100, 10)
+    add_workout("x", "xyz", 100, 10)
     print(get_workouts())

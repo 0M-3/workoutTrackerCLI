@@ -47,13 +47,15 @@ def init_db():
                 REPS INTEGER NOT NULL,
                 WEIGHT INTEGER NOT NULL,
                 DATE TIMESTAMP NOT NULL,
-                FOREIGN KEY (WORKOUT_ID) REFERENCES WORKOUTS (ID) ON DELETE CASCADE
+                FOREIGN KEY (WORKOUT_ID) REFERENCES WORKOUTS (ID) ON DELETE CASCADE,
+                UNIQUE (WORKOUT_ID, SET_NUMBER)
             )
         ''')
 
         conn.commit()
 
 # --- CRUD OPERATIONS ---
+#FIX: Make sure to debug the logic below
 """
 Basically what it needs to do is take exercise name and count the number of sets for the exercise already executed in the past 12 hours and add 1 to it to get the set number.
 The current logic is rather flawed in comparison.
@@ -81,23 +83,28 @@ def add_workout(date: datetime, exercise: str, weight: int, reps: int):
         # 1. Insert into workouts
         cursor.execute("""
             INSERT INTO WORKOUTS (DATE, EXERCISE_ID)
-            VALUES (?, ?)
-            ON CONFLICT (EXERCISE_ID) DO NOTHING
-            """
-            (date, exercise_id,))
+            SELECT ?, ?
+            WHERE NOT EXISTS (
+                SELECT 1 FROM WORKOUTS
+                WHERE date(DATE) = date(?)
+                AND EXERCISE_ID = (?)
+            )
+            """,
+            (date, exercise_id, date, exercise_id))
         cursor.execute(
             "SELECT ID FROM WORKOUTS WHERE EXERCISE_ID = ?",
-            (exercise_id))
+            (exercise_id,))
         workout_id = cursor.fetchone()
 
         # 2. Insert each set
         cursor.execute("SELECT COUNT(*) FROM SETS WHERE WORKOUT_ID = ?", (workout_id))
-        set_number = cursor.fetchone()
+        set_row= cursor.fetchone()
+        if set_row:
+            set_number = set_row[0]
         cursor.execute("""
             INSERT INTO SETS (WORKOUT_ID, SET_NUMBER, REPS, WEIGHT, DATE)
             VALUES (?, ?, ?, ?, ?)
-            ON CONFLICT (WORKOUT_ID, SET_NUMBER, REPS, WEIGHT)
-        """, (workout_id, set_number[0]+1, reps, weight))
+        """, (workout_id[0], set_number+1, reps, weight, date))
         conn.commit()
 
 def get_workouts():
@@ -114,14 +121,14 @@ def get_workouts():
     # workouts.append("other")
     return workouts
 
-def get_dates(date_format= "%Y-%m-%d %H:%M:%S"):
+def get_dates(date_format= "%Y-%m-%d"):
     """
     Get the 5 most recent distinct dates from the database.
     """
     with get_connection() as conn:
         cursor = conn.cursor()
         
-    cursor.execute("SELECT DATE FROM WORKOUTS")
+    cursor.execute("SELECT date(DATE) FROM WORKOUTS")
     datetimes = [row[0] for row in cursor.fetchall()]
     distinct_dates = set()
     for dt_str in datetimes:

@@ -37,6 +37,10 @@ class AddWorkout(Widget):
             yield Input(placeholder = "Number of reps", id = "reps", type = "number")
             yield Input(placeholder = "Weight", id = "weight", type = "number")
             yield Button("Submit Set", variant = "success", id = "submit-workout")
+
+    def select_opened():
+        self.workouts = get_workouts()
+        self.workouts.append("other")
             
     @on(Select.Changed, "#select-workout")
     def select_changed(self, event:Select.Changed) -> None:

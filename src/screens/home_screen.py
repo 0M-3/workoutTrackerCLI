@@ -6,6 +6,7 @@ from textual.containers import Vertical, Horizontal
 
 from widgets.side_bar import SideBar
 from widgets.welcome import Welcome
+from widgets.app_header import AppHeader
 
 class HomeScreen(Screen[None]):
     BINDINGS = [
@@ -17,8 +18,9 @@ class HomeScreen(Screen[None]):
         self.view = view
         self.visual = visual
     def compose(self) -> ComposeResult:
-        # yield AppHeader()
-        with Horizontal():
-            yield SideBar(add = self.add, view = self.view, delete = self.delete, visual = self.visual)
-            yield Welcome()
+        with Vertical():
+            yield AppHeader()
+            with Horizontal():
+                yield SideBar(add = self.add, view = self.view, delete = self.delete, visual = self.visual)
+                yield Welcome()
         

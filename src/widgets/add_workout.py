@@ -28,13 +28,14 @@ class OtherInput(Input):
 class AddWorkout(Widget):
     init_db()
     workouts = get_workouts()
+    workouts.append("other")
 
     def compose(self) -> ComposeResult:
         with Vertical():
             yield Select.from_values(self.workouts, id = "select-workout", prompt = "Select workout")
             yield OtherInput(placeholder = "Other workout", id = "other-workout")
             yield Input(placeholder = "Number of reps", id = "reps", type = "number")
-            # yield Input(placeholder = "Number of sets", id = "sets", type = "number")
+            yield Input(placeholder = "Weight", id = "weight", type = "number")
             yield Button("Submit Set", variant = "success", id = "submit-workout")
             
     @on(Select.Changed, "#select-workout")
@@ -45,11 +46,12 @@ class AddWorkout(Widget):
     @on(Button.Pressed, "#submit-workout")
     def Pressed_Submit(self, event:Button.Pressed) -> None:
     #FIX:This function needs to be tested further and integrated with the database functions.
-        now_utc = datetime.now()
+        now= datetime.now()
         select_query = self.query_one("#select-workout", Select)
         if select_query.value == "other":
-            select_query = self.query_one("other-workout", Input)
+            select_query = self.query_one("#other-workout", Input)
         rep_query = self.query_one("#reps", Input)
+        weight_query = self.query_one("#weight", Input)
         # set_query = self.query_one("#sets", Input)
-        add_workout(date = now_utc, exercise = select_query.value, rep = rep_query.value)
+        add_workout(date = now, exercise = select_query.value, reps = int(rep_query.value), weight = int(weight_query.value))
 

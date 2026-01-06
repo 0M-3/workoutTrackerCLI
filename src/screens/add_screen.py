@@ -1,4 +1,3 @@
-#FIX: Test the screen for the add workout screen
 from textual.app import ComposeResult
 from textual.screen import Screen
 from textual.widgets import Footer

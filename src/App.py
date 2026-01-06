@@ -50,7 +50,7 @@ class LayoutApp(App):
     def Pressed_Delete(self) -> None:
         self.push_screen(DeleteScreen(add = AddScreen, delete = DeleteScreen, view = ViewScreen, visual = VisualizeScreen))
 
-    @on(Button.Pressed, "#visualized")
+    @on(Button.Pressed, "#visualize")
     def Pressed_Visualize(self) -> None:
         self.push_screen(VisualizeScreen(add = AddScreen, delete = DeleteScreen, view = ViewScreen, visual = VisualizeScreen))
 

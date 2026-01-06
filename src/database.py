@@ -154,7 +154,7 @@ def delete_workout_by_date(date):
     "Delete all workouts on a provided date"
     with get_connection() as conn:
         cursor = conn.cursor()
-    cursor.execute("DELETE FROM WORKOUTS WHERE DATE LIKE ?", (f'%{date}%',))
+    cursor.execute("DELETE FROM WORKOUTS WHERE date(DATE) =?", (f'%{date}%',))
     conn.commit()
     conn.close()
     

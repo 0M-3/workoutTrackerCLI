@@ -10,7 +10,7 @@ from database import get_dates, delete_workout_by_date
 class DeleteWorkout(Widget):
     dates = get_dates()
     def compose(self) -> ComposeResult:
-        with Horizontal():
+        with Horizontal(classes = "widget-container"):
             yield Select.from_values(self.dates, id = "delete-select")
             yield Button("Delete",variant = "primary", id = "delete-button")
 

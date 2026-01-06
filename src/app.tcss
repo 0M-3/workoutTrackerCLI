@@ -18,7 +18,31 @@ SideBar {
     outline: thick $accent;
     margin: 1 1;
 }
-MainContainer {
+HomeScreen {
+    width: 0.7fr;
+    align: center top;
+    height: 1fr;
+    border: solid round white;
+}
+AddScreen {
+    width: 0.7fr;
+    align: center top;
+    height: 1fr;
+    border: solid round white;
+}
+DeleteScreen {
+    width: 0.7fr;
+    align: center top;
+    height: 1fr;
+    border: solid round white;
+}
+ViewScreen {
+    width: 0.7fr;
+    align: center top;
+    height: 1fr;
+    border: solid round white;
+}
+VisualizeScreen {
     width: 0.7fr;
     align: center top;
     height: 1fr;
@@ -30,6 +54,20 @@ Welcome {
     content-align: center top;
     height: 1fr;
     border: solid round white;
+}
+
+.widget-container {
+    width: 1fr;
+    align: center top;
+    content-align: center top;
+    height: 1fr;
+    border: solid round white;
+}
+.screen-container {
+    width: 1fr;
+    align: center middle;
+    content-align: center top;
+    height: 1fr;
 }
 
 AppHeader #cl-header-container {

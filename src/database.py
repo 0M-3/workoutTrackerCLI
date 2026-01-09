@@ -144,7 +144,6 @@ def view_workouts(date: datetime | None = None):
         """)
     else:
         cursor.execute("""
-            WHERE date(DATE) = date(?)
             SELECT WORKOUTS.ID,
                 WORKOUTS.DATE,
                 EXERCISES.EXERCISE_NAME,
@@ -156,13 +155,12 @@ def view_workouts(date: datetime | None = None):
             FROM WORKOUTS
             INNER JOIN EXERCISES ON EXERCISES.ID = WORKOUTS.EXERCISE_ID
             INNER JOIN SETS ON SETS.WORKOUT_ID = WORKOUTS.ID
-            GROUP BY WORKOUTS.ID
             WHERE date(WORKOUTS.DATE) = date(?)
+            GROUP BY WORKOUTS.ID
             ORDER BY WORKOUTS.DATE DESC       
-        """, (date))
+        """, (date,))
     view_workouts = cursor.fetchall()
     return view_workouts
-    #FIX: I need to work through the logic of this query and find a way to return it.
 
 def get_dates(date_format= "%Y-%m-%d"):
     """
@@ -203,6 +201,4 @@ def delete_workout_by_date(date):
     
 if __name__=='__main__':
     init_db()
-    add_workout("x", "abc", 100, 10)
-    add_workout("x", "xyz", 100, 10)
-    print(get_workouts())
+    print(view_workouts())

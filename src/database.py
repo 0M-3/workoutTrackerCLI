@@ -55,7 +55,6 @@ def init_db():
         conn.commit()
 
 # --- CRUD OPERATIONS ---
-#FIX: Make sure to debug the logic below
 """
 Basically what it needs to do is take exercise name and count the number of sets for the exercise already executed in the past 12 hours and add 1 to it to get the set number.
 The current logic is rather flawed in comparison.
@@ -121,6 +120,48 @@ def get_workouts():
     # workouts.append("other")
     return workouts
 
+def view_workouts(date: datetime | None = None):
+    """
+    Get a list consisting of all the recent workouts recorded in the tables
+    """
+    with get_connection() as conn:
+        cursor = conn.cursor()
+    if date == None:
+        cursor.execute("""
+            SELECT WORKOUTS.ID,
+                WORKOUTS.DATE,
+                EXERCISES.EXERCISE_NAME,
+                MAX(SETS.SET_NUMBER) AS SETS_PERFORMED,
+                MAX(SETS.REPS) AS MAX_REPS,
+                MIN(SETS.REPS) AS MIN_REPS,
+                MAX(SETS.WEIGHT) AS MAX_WEIGHT,
+                MIN(SETS.WEIGHT) AS MIN_WEIGHT
+            FROM WORKOUTS
+            INNER JOIN EXERCISES ON EXERCISES.ID = WORKOUTS.EXERCISE_ID
+            INNER JOIN SETS ON SETS.WORKOUT_ID = WORKOUTS.ID
+            GROUP BY WORKOUTS.ID
+            ORDER BY WORKOUTS.DATE DESC       
+        """)
+    else:
+        cursor.execute("""
+            SELECT WORKOUTS.ID,
+                WORKOUTS.DATE,
+                EXERCISES.EXERCISE_NAME,
+                MAX(SETS.SET_NUMBER) AS SETS_PERFORMED,
+                MAX(SETS.REPS) AS MAX_REPS,
+                MIN(SETS.REPS) AS MIN_REPS,
+                MAX(SETS.WEIGHT) AS MAX_WEIGHT,
+                MIN(SETS.WEIGHT) AS MIN_WEIGHT
+            FROM WORKOUTS
+            INNER JOIN EXERCISES ON EXERCISES.ID = WORKOUTS.EXERCISE_ID
+            INNER JOIN SETS ON SETS.WORKOUT_ID = WORKOUTS.ID
+            WHERE date(WORKOUTS.DATE) = date(?)
+            GROUP BY WORKOUTS.ID
+            ORDER BY WORKOUTS.DATE DESC       
+        """, (date,))
+    view_workouts = cursor.fetchall()
+    return view_workouts
+
 def get_dates(date_format= "%Y-%m-%d"):
     """
     Get the 5 most recent distinct dates from the database.
@@ -160,6 +201,4 @@ def delete_workout_by_date(date):
     
 if __name__=='__main__':
     init_db()
-    add_workout("x", "abc", 100, 10)
-    add_workout("x", "xyz", 100, 10)
-    print(get_workouts())
+    print(view_workouts())

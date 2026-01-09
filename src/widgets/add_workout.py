@@ -49,7 +49,6 @@ class AddWorkout(Widget):
 
     @on(Button.Pressed, "#submit-workout")
     def Pressed_Submit(self, event:Button.Pressed) -> None:
-    #FIX:This function needs to be tested further and integrated with the database functions.
         now= datetime.now()
         select_query = self.query_one("#select-workout", Select)
         if select_query.value == "other":

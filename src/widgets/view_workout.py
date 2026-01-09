@@ -11,7 +11,7 @@ class ViewWorkout(Widget):
     dates= get_dates()
     def compose(self) -> ComposeResult:
         with Horizontal(classes = "widget-container"):
-            yield Select.from_values(self.dates)
+            yield Select.from_values(self.dates, id = "view-select")
             yield Button("Query",variant = "primary", id = "view-button")
 
     @on(Button.Pressed, "#view-button")

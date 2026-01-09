@@ -55,7 +55,6 @@ def init_db():
         conn.commit()
 
 # --- CRUD OPERATIONS ---
-#FIX: Make sure to debug the logic below
 """
 Basically what it needs to do is take exercise name and count the number of sets for the exercise already executed in the past 12 hours and add 1 to it to get the set number.
 The current logic is rather flawed in comparison.
@@ -120,6 +119,50 @@ def get_workouts():
     # 2. Add the "other" option
     # workouts.append("other")
     return workouts
+
+def view_workouts(date: datetime | None = None):
+    """
+    Get a list consisting of all the recent workouts recorded in the tables
+    """
+    with get_connection() as conn:
+        cursor = conn.cursor()
+    if date == None:
+        cursor.execute("""
+            SELECT WORKOUTS.ID,
+                WORKOUTS.DATE,
+                EXERCISES.EXERCISE_NAME,
+                MAX(SETS.SET_NUMBER) AS SETS_PERFORMED,
+                MAX(SETS.REPS) AS MAX_REPS,
+                MIN(SETS.REPS) AS MIN_REPS,
+                MAX(SETS.WEIGHT) AS MAX_WEIGHT,
+                MIN(SETS.WEIGHT) AS MIN_WEIGHT
+            FROM WORKOUTS
+            INNER JOIN EXERCISES ON EXERCISES.ID = WORKOUTS.EXERCISE_ID
+            INNER JOIN SETS ON SETS.WORKOUT_ID = WORKOUTS.ID
+            GROUP BY WORKOUTS.ID
+            ORDER BY WORKOUTS.DATE DESC       
+        """)
+    else:
+        cursor.execute("""
+            WHERE date(DATE) = date(?)
+            SELECT WORKOUTS.ID,
+                WORKOUTS.DATE,
+                EXERCISES.EXERCISE_NAME,
+                MAX(SETS.SET_NUMBER) AS SETS_PERFORMED,
+                MAX(SETS.REPS) AS MAX_REPS,
+                MIN(SETS.REPS) AS MIN_REPS,
+                MAX(SETS.WEIGHT) AS MAX_WEIGHT,
+                MIN(SETS.WEIGHT) AS MIN_WEIGHT
+            FROM WORKOUTS
+            INNER JOIN EXERCISES ON EXERCISES.ID = WORKOUTS.EXERCISE_ID
+            INNER JOIN SETS ON SETS.WORKOUT_ID = WORKOUTS.ID
+            GROUP BY WORKOUTS.ID
+            WHERE date(WORKOUTS.DATE) = date(?)
+            ORDER BY WORKOUTS.DATE DESC       
+        """, (date))
+    view_workouts = cursor.fetchall()
+    return view_workouts
+    #FIX: I need to work through the logic of this query and find a way to return it.
 
 def get_dates(date_format= "%Y-%m-%d"):
     """

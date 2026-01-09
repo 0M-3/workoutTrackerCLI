@@ -18,6 +18,10 @@ class ViewScreen(Screen[None]):
         self.view = view
         self.delete = delete
         self.visual = visual
+    def on_mount(self) -> None:
+        target_widget = self.query_one("#view-select")
+        target_widget.focus()
+        
     def compose(self) -> ComposeResult:
         yield AppHeader()
         with Horizontal(classes = "screen-container"):

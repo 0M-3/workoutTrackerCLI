@@ -16,6 +16,7 @@ class ViewWorkout(Widget):
                 yield Button("Query",variant = "primary", id = "view-button")
             yield DataTable(id = "view-table")
 
+
     @on(Button.Pressed, "#view-button")
     def Pressed_view(self):
         table = self.query_one("#view-table", DataTable)

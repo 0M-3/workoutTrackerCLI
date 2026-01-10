@@ -18,7 +18,7 @@ class DeleteScreen(Screen[None]):
         self.delete = delete
         self.visual = visual
     def on_mount(self) -> None:
-        target_widget = self.query_one("#delete-select")
+        target_widget = self.query_one("#delete-table")
         target_widget.focus()
 
     def compose(self) -> ComposeResult:

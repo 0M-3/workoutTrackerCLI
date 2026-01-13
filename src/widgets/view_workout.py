@@ -12,9 +12,10 @@ class ViewWorkout(Widget):
     def compose(self) -> ComposeResult:
         with Vertical(classes = "widget-container"):
             with Horizontal():
-                yield Select.from_values(self.dates, id = "view-select")
+                yield Select.from_values(self.dates, id = "view-select", classes = "widget-select")
                 yield Button("Query",variant = "primary", id = "view-button")
             yield DataTable(id = "view-table")
+
 
     @on(Button.Pressed, "#view-button")
     def Pressed_view(self):

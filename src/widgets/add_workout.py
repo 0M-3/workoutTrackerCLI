@@ -12,8 +12,8 @@ from database import init_db, get_workouts, add_workout
 class OtherInput(Input):
     show_input: reactive[str | None] = reactive(None)
 
-    def __init__(self, id, placeholder=""):
-        super().__init__(id=id, placeholder=placeholder, classes="hidden")
+    def __init__(self, id, placeholder="", classes = "widget-input"):
+        super().__init__(id=id, placeholder=placeholder, classes= classes)
         self.display = False
 
     def watch_show_input(self, show: bool) -> None:
@@ -32,10 +32,10 @@ class AddWorkout(Widget):
 
     def compose(self) -> ComposeResult:
         with Vertical(classes = "widget-container"):
-            yield Select.from_values(self.workouts, id = "select-workout", prompt = "Select workout")
-            yield OtherInput(placeholder = "Other workout", id = "other-workout")
-            yield Input(placeholder = "Number of reps", id = "reps", type = "number")
-            yield Input(placeholder = "Weight", id = "weight", type = "number")
+            yield Select.from_values(self.workouts, id = "select-workout", prompt = "Select workout", classes = "widget-select")
+            yield OtherInput(placeholder = "Other workout", id = "other-workout", classes = "widget-input")
+            yield Input(placeholder = "Number of reps", id = "reps", type = "number", classes = "widget-input")
+            yield Input(placeholder = "Weight", id = "weight", type = "number", classes = "widget-input")
             yield Button("Submit Set", variant = "success", id = "submit-workout")
 
     def select_opened():

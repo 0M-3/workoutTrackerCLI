@@ -10,11 +10,11 @@ class Welcome(Widget):
     | | /| / / __ \/ ___/ //_/ __ \/ / / / __/
     | |/ |/ / /_/ / /  / ,< / /_/ / /_/ / /_  
     |__/|__/\____/_/  /_/|_|\____/\__,_/\__/  
-          ______                __            
-         /_  __/________ ______/ /_____  _____
-          / / / ___/ __ `/ ___/ //_/ _ \/ ___/
-         / / / /  / /_/ / /__/ ,< /  __/ /    
-        /_/ /_/   \__,_/\___/_/|_|\___/_/                                                                                                              
+       ______                __            
+      /_  __/________ ______/ /_____  _____
+       / / / ___/ __ `/ ___/ //_/ _ \/ ___/
+      / / / /  / /_/ / /__/ ,< /  __/ /    
+     /_/ /_/   \__,_/\___/_/|_|\___/_/     
                ________    ____
               / ____/ /   /  _/
              / /   / /    / /  
@@ -26,6 +26,6 @@ class Welcome(Widget):
     BORDER_TITLE = "Welcome to Workout Tracker CLI!"
     def compose(self) -> ComposeResult:
         with Center():
-            yield Label(self.MESSAGE)
+            yield Label(self.MESSAGE, classes = "welcome-label")
             # yield Label(self.COMMENT)
         

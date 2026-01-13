@@ -9,8 +9,22 @@ SideBar {
 .sidebutton {
     width: 0.9fr;
     content-align: center middle;
-    outline: hkey $accent;
     margin: 1;
+    height: 3;
+    background: $primary; 
+    border: none;
+}
+
+.sidebutton:focus {
+    background: $accent;
+    color: $text;
+    text-style: bold italic;
+    border: tall white;
+    /* Adding a subtle offset or lift effect */
+    offset-x: 1;
+}
+.sidebutton > Label {
+    background: transparent;
 }
 .mainbutton {
     width: 0.8fr;
@@ -18,31 +32,7 @@ SideBar {
     outline: thick $accent;
     margin: 1 1;
 }
-HomeScreen {
-    width: 0.7fr;
-    align: center top;
-    height: 1fr;
-    border: solid round white;
-}
-AddScreen {
-    width: 0.7fr;
-    align: center top;
-    height: 1fr;
-    border: solid round white;
-}
-DeleteScreen {
-    width: 0.7fr;
-    align: center top;
-    height: 1fr;
-    border: solid round white;
-}
-ViewScreen {
-    width: 0.7fr;
-    align: center top;
-    height: 1fr;
-    border: solid round white;
-}
-VisualizeScreen {
+HomeScreen, AddScreen, DeleteScreen, ViewScreen, VisualizeScreen {
     width: 0.7fr;
     align: center top;
     height: 1fr;
@@ -54,6 +44,34 @@ Welcome {
     content-align: center top;
     height: 1fr;
     border: solid round white;
+}
+.widget-input {
+    margin: 1 0;
+    background: $boost; /* Slightly different from the main background */
+    border: tall $surface;
+    padding: 0 1;
+}
+
+.widget-input:focus {
+    border: tall $accent;
+    background: $surface;
+}
+.widget-select {
+    margin: 1 0;
+    border: tall $surface;
+}
+
+.widget-select:focus {
+    border: tall $accent;
+    text-style: bold;
+}
+
+/* Styling the arrow/chevron in some Textual versions */
+.widget-select > .select--stop {
+    color: $accent;
+}
+.welcome-label {
+    align: center top;
 }
 
 .widget-container {

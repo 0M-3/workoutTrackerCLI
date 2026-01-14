@@ -38,7 +38,7 @@ class AddWorkout(Widget):
             yield Input(placeholder = "Weight", id = "weight", type = "number", classes = "widget-input")
             yield Button("Submit Set", variant = "success", id = "submit-workout")
 
-    def select_opened():
+    def select_opened(self):
         self.workouts = get_workouts()
         self.workouts.append("other")
             

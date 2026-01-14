@@ -187,17 +187,16 @@ def update_workout_weight(workout_id, new_weight):
 def delete_workout(workout_id):
     """Deletes a workout (and its sets via CASCADE)."""
     with get_connection() as conn:
-        conn.execute("DELETE FROM WORKOUTS WHERE ID = ?", (workout_id,))
+        cursor = conn.cursor()
+        cursor.execute("DELETE FROM WORKOUTS WHERE ID = ?", (workout_id,))
         conn.commit()
-        conn.close()
 
 def delete_workout_by_date(date):
     "Delete all workouts on a provided date"
     with get_connection() as conn:
         cursor = conn.cursor()
-    cursor.execute("DELETE FROM WORKOUTS WHERE date(DATE) =?", (f'%{date}%',))
-    conn.commit()
-    conn.close()
+        cursor.execute("DELETE FROM WORKOUTS WHERE date(DATE) =?", (date, ))
+        conn.commit()
     
 if __name__=='__main__':
     init_db()
